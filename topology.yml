@@ -55,3 +55,7 @@ groups:
   - name: user-accessible
     nodes:
       - student-vm
+
+  - name: servers
+    nodes:
+      - server
