@@ -1,0 +1,48 @@
+- name: Create user
+  user:
+    name: user
+    shell: /bin/bash
+    create_home: yes
+    password: "{{ 'user' | password_hash('sha512') }}"
+
+- name: Install ssh
+  apt:
+    name: openssh-server
+    state: present
+    update_cache: yes
+
+- name: Enable ssh password
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication yes'
+
+- name: Restart ssh
+  service:
+    name: ssh
+    state: restarted
+    enabled: yes
+
+
+- name: Create lab folder
+  file:
+    path: /home/user/lab
+    state: directory
+    owner: user
+    group: user
+
+
+- name: Get flag from API
+  uri:
+    url: http://10.10.20.10:8000/flag/user
+    method: GET
+    return_content: yes
+  register: api
+
+
+- name: Save flag
+  copy:
+    content: "{{ api.json.flag }}"
+    dest: /home/user/lab/key.txt
+    owner: user
+    group: user
