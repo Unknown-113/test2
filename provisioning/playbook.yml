@@ -1,20 +1,10 @@
-- hosts: all
+- hosts: servers
   become: yes
-
-  roles:
-    - kypo-disable-qxl
-    - kypo-user-access
-
-
-- hosts: server
-  become: yes
-
   roles:
     - server
 
 
 - hosts: student-vm
   become: yes
-
   roles:
     - student
